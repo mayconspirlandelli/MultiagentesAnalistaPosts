@@ -1,6 +1,8 @@
 #from crewai.tools import BaseTool
 #from crewai_tools import BaseTool
 from crewai.tools import tool
+#from crewai import Tool
+# from crewai.tools import BaseTool
 from playwright.sync_api import sync_playwright, Playwright
 
 
@@ -19,33 +21,33 @@ from playwright.sync_api import sync_playwright, Playwright
     
     
 
-class InstagramScraperTool(tool):
-    name = "InstagramScraperTool"
-    description = "Extrai informações da interface web do Instagram"
+# class InstagramScraperTool(BaseTool):
+#     name = "InstagramScraperTool"
+#     description = "Extrai informações da interface web do Instagram"
 
-    def run(playwright: Playwright) -> str:
+    # def run(playwright: Playwright) -> str:
         
-            browser = playwright.chromium.launch(headless=False)
-            context = browser.new_context()
-            page = context.new_page()
-            page.goto("https://www.instagram.com")
+    #         browser = playwright.chromium.launch(headless=False)
+    #         context = browser.new_context()
+    #         page = context.new_page()
+    #         page.goto("https://www.instagram.com")
 
-            input("Faça login e pressione Enter para continuar...")
+    #         input("Faça login e pressione Enter para continuar...")
 
-            page.wait_for_timeout(5000)  # Espera carregar
-            page.goto("https://www.instagram.com/inf.ufg/")
-            page.wait_for_timeout(3000)
+    #         page.wait_for_timeout(5000)  # Espera carregar
+    #         page.goto("https://www.instagram.com/inf.ufg/")
+    #         page.wait_for_timeout(3000)
 
-            # Exemplo: extrair o texto dos comentários do primeiro post
-            post = page.locator('article').nth(0)
-            post.click()
-            page.wait_for_timeout(2000)
+    #         # Exemplo: extrair o texto dos comentários do primeiro post
+    #         post = page.locator('article').nth(0)
+    #         post.click()
+    #         page.wait_for_timeout(2000)
 
-            comments = page.locator('[role="dialog"] ul li span').all_inner_texts()
-            print(f"Total de comentários encontrados: {len(comments)}")
+    #         comments = page.locator('[role="dialog"] ul li span').all_inner_texts()
+    #         print(f"Total de comentários encontrados: {len(comments)}")
 
-            browser.close()
-    return comments[:5]  # Retorna os primeiros 5 comentários
+    #         browser.close()
+    #         #return comments[:5]  # Retorna os primeiros 5 comentários
             
             
 #     with sync_playwright() as playwright:
@@ -61,31 +63,37 @@ class InstagramScraperTool(tool):
 
 
 
-# class InstagramScraperTool(tool):
-#     name = "InstagramScraperTool"
-#     description = "Extrai informações da interface web do Instagram"
+class InstagramScraperTool(tool):
+    name = "InstagramScraperTool"
+    description = "Extrai informações da interface web do Instagram"
 
-#     def _run(self, input_text: str):
-#         with sync_playwright() as p:
-#             browser = p.chromium.launch(headless=False)
-#             context = browser.new_context()
-#             page = context.new_page()
-#             page.goto("https://www.instagram.com")
 
-#             input("Faça login e pressione Enter para continuar...")
+    #def _run() -> str:
+    def run(playwright: Playwright) -> str:
+        
+        browser = playwright.chromium.launch(headless=False)
+        context = browser.new_context()
+        page = context.new_page()
+        page.goto("https://www.instagram.com")
 
-#             page.wait_for_timeout(5000)  # Espera carregar
-#             page.goto("https://www.instagram.com/nome_do_perfil/")
-#             page.wait_for_timeout(3000)
+        input("Faça login e pressione Enter para continuar...")
 
-#             # Exemplo: extrair o texto dos comentários do primeiro post
-#             post = page.locator('article').nth(0)
-#             post.click()
-#             page.wait_for_timeout(2000)
+        page.wait_for_timeout(5000)  # Espera carregar
+        page.goto("https://www.instagram.com/nome_do_perfil/")
+        page.wait_for_timeout(3000)
 
-#             comments = page.locator('[role="dialog"] ul li span').all_inner_texts()
-#             print
+        # Exemplo: extrair o texto dos comentários do primeiro post
+        post = page.locator('article').nth(0)
+        post.click()
+        page.wait_for_timeout(2000)
 
-#             browser.close()
+        comments = page.locator('[role="dialog"] ul li span').all_inner_texts()
+        print(f"Total de comentários encontrados: {len(comments)}")
+        browser.close()
 
-#             #return "\n".join(comments[:5])
+        primeiros_comentarios = comments[:5]
+        texto_formatado = "\n".join(primeiros_comentarios)
+        return texto_formatado
+
+    with sync_playwright() as playwright:
+        run(playwright)            
